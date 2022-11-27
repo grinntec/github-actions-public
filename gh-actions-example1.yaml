@@ -1,0 +1,147 @@
+# .github/workflows/gh-actions-example1.yaml
+#
+# this workflow will
+#   1) create a github hosted ubutnu runner
+#   2) use github hosted secrets to authenticate to azure
+#   3) checkout the code from the working-directory
+#   4) install terraform on the runner
+#   5) check whether the configuration files are formatted properly
+#   6) initialize the terraform backend
+#   7) validate the terraform file
+#   8) generate a terraform plan
+#       8a) if the trigger is a pull_request then the format, init and plan will be written to the comments
+#   9) highlights if a plan fails
+#   10) if destroy is selected via a workflow_dispatch the resources will be destroyed
+#   11) if all else is okay then the resources will be created/updated
+
+name: gh-actions-example1
+
+# this workflow should only run when a commit is pushed to the main branch or on any pull requests
+# any changes to the workflow folder will be ignored
+on:
+  workflow_dispatch:
+    inputs:
+      TFAction:
+        type: choice
+        description: Terraform action
+        options:
+        - Apply
+        - Destroy
+
+  push:
+    paths-ignore:
+      - '.github/workflows/**'
+    branches:
+      - main
+  pull_request:
+
+# this workflow uses data in the this path
+defaults:
+  run:
+    working-directory: codefolder1/
+
+# use a github runner
+jobs:
+  terraform-frontend:
+    runs-on: ubuntu-latest
+
+# use github secrets to authenticate to azure
+    env:
+      ARM_CLIENT_ID: ${{secrets.ARM_CLIENT_ID}}
+      ARM_CLIENT_SECRET: ${{secrets.ARM_CLIENT_SECRET}}
+      ARM_TENANT_ID: ${{secrets.ARM_TENANT_ID}}
+      ARM_SUBSCRIPTION_ID: ${{secrets.ARM_SUBSCRIPTION_ID}}
+
+
+    steps:
+      # checkout the current configuration from the working-directory
+      - name: Checkout the code
+        uses: actions/checkout@v3
+    
+      # retrieves the Terraform CLI used in the GitHub action workflow
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      # checks whether the configuration has been properly formatted. If the configuration isn't properly formatted this step will produce an error.
+      - name: Terraform format
+        id: fmt
+        run: terraform fmt
+
+      # initializes the configuration used in the GitHub action workflow
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        
+      # validates the configuration used in the GitHub action workflow
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      # generates a Terraform plan
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color -input=false
+        continue-on-error: true
+
+      # adds a comment to the pull request with the results of the format, init and plan steps.
+      # in addition, it displays the plan output (steps.plan.outputs.stdout).
+      # this step only runs on pull requests.
+      - name: Update Pull Request
+        uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+            <details><summary>Show Plan</summary>
+            \`\`\`\n
+            ${process.env.PLAN}
+            \`\`\`
+            </details>
+            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+            github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+            })
+      
+      # returns whether a plan was successfully generated or not.
+      # this step highlights whenever a plan fails because the "Terraform Plan" step continues on error
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+      
+      # allows you to destroy all the resources
+      # only runs when manually triggered by workflow dispatch and selecting the destroy choice
+      - name: Terraform Apply - manually
+        if: ${{ inputs.TFAction == 'apply'}}
+        run: terraform apply -auto-approve -input=false
+
+      # applies the configuration.
+      # this step will only run when a commit is pushed to main
+      - name: Terraform Apply - on push
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve -input=false
+
+      # allows you to destroy all the resources
+      # only runs when manually triggered by workflow dispatch and selecting the destroy choice
+      - name: Terraform Destroy - manually
+        if: ${{ inputs.TFAction == 'destroy'}}
+        run: terraform destroy -auto-approve
+
+      # get the storage account web endpoint URL
+      # strip the endpoint
+      - name: Get the storage account web URL
+        uses: azure/CLI@v1
+        with: 
+          inlinescript: |
+            storage=$(az storage account show --name sacrcgrinntec --resource-group rg-crcgrinntec --query primaryEndpoints.web) \
+            storage1=$(echo $storage | sed -e 's|^.*://||') \
+            storage2=$(echo $storage1 | sed -e 's|/.*$||') \
+            echo $storage2
