@@ -134,14 +134,3 @@ jobs:
       - name: Terraform Destroy - manually
         if: ${{ inputs.TFAction == 'destroy'}}
         run: terraform destroy -auto-approve
-
-      # get the storage account web endpoint URL
-      # strip the endpoint
-      - name: Get the storage account web URL
-        uses: azure/CLI@v1
-        with: 
-          inlinescript: |
-            storage=$(az storage account show --name sacrcgrinntec --resource-group rg-crcgrinntec --query primaryEndpoints.web) \
-            storage1=$(echo $storage | sed -e 's|^.*://||') \
-            storage2=$(echo $storage1 | sed -e 's|/.*$||') \
-            echo $storage2
