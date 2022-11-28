@@ -117,20 +117,21 @@ jobs:
         if: steps.plan.outcome == 'failure'
         run: exit 1
       
-      # allows you to destroy all the resources
-      # only runs when manually triggered by workflow dispatch and selecting the destroy choice
-      - name: Terraform Apply - manually
-        if: ${{ inputs.TFAction == 'apply'}}
-        run: terraform apply -auto-approve -input=false
-
-      # applies the configuration.
+      # applies the configuration (automated trigger)
       # this step will only run when a commit is pushed to main
+      # either directly or as a result of a pull request
       - name: Terraform Apply - on push
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
 
-      # allows you to destroy all the resources
+      # allows you to create all the resources (manual trigger)
+      # only runs when manually triggered by workflow dispatch and selecting the apply choice
+      - name: Terraform Apply - manually
+        if: ${{ inputs.TFAction == 'apply'}}
+        run: terraform apply -auto-approve -input=false
+
+      # allows you to destroy all the resources (manual trigger)
       # only runs when manually triggered by workflow dispatch and selecting the destroy choice
       - name: Terraform Destroy - manually
         if: ${{ inputs.TFAction == 'destroy'}}
-        run: terraform destroy -auto-approve
+        run: terraform destroy -auto-approve      
