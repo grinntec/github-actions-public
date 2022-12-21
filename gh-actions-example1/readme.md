@@ -23,14 +23,13 @@ There are multiple triggers for this workflow to execute. The automatic executio
 The workflow expects Terraform code to be in the given working directory. This workflow has succeeded when the working directory is setup as follows. So your working directory value would be `codefolder1/` if using the structure exactly as below.
 
 ```sh
-.
-{GitHub account}
-|{GitHub repository}
-|   /codefolder1
-|       |main.tf
-|       |providers.tf
-|       |variables.tf
-|       |terraform.tfvars
+{GitHub account}/
+|- {GitHub repository}/
+|   |-codefolder1/
+|       |- main.tf
+|       |- providers.tf
+|       |- variables.tf
+|       |- terraform.tfvars
 ```
 
 **Runner**
