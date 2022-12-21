@@ -7,9 +7,9 @@ This GitHub actions workflow file has been written to build cloud resources with
 ## TL;DR
 
 > Ensure the workflow is located in your own GitHub repository
-
+>
 > Edit the `working-directory` path to match your code working directory
-
+>
 > Execute the workflow by either a  `push` `pull request` or `manually`
 
 ## What the workflow does
