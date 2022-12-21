@@ -30,6 +30,20 @@ The workflow expects Terraform code to be in the given working directory. This w
 |       |- providers.tf
 |       |- variables.tf
 |       |- terraform.tfvars
+
+my-app/
+├─ node_modules/
+├─ public/
+│  ├─ favicon.ico
+│  ├─ index.html
+│  ├─ robots.txt
+├─ src/
+│  ├─ index.css
+│  ├─ index.js
+├─ .gitignore
+├─ package.json
+├─ README.md
+
 ```
 
 **Runner**
