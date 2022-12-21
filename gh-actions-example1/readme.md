@@ -32,11 +32,11 @@ The workflow expects Terraform code to be in the given working directory. This w
 │       ├─ terraform.tfvars
 ```
 
-**Runner**
+## Runner
 
 This workflow relies on using GitHub provisioned runners. It declares a standard Ubuntu version.
 
-**Authentication**
+## Authentication
 
 GitHub actions secrets need to be populated with the `ARM_*` environment variables that has the service principal credentials with permissions required to CRUD cloud resources.
 
@@ -47,7 +47,7 @@ ARM_TENANT_ID: ${{secrets.ARM_TENANT_ID}}
 ARM_SUBSCRIPTION_ID: ${{secrets.ARM_SUBSCRIPTION_ID}}
 ```
 
-**Terraform actions**
+## Terraform actions
 
 The workflow processes the following Terraform actions:
 
