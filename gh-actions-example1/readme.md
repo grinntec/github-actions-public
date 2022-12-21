@@ -25,12 +25,12 @@ The workflow expects Terraform code to be in the given working directory. This w
 ```sh
 .
 {GitHub account}
-|_{GitHub repository}
-|__/codefolder1
-|   |main.tf
-|   |providers.tf
-|   |variables.tf
-|   |terraform.tfvars
+|{GitHub repository}
+|   /codefolder1
+|       |main.tf
+|       |providers.tf
+|       |variables.tf
+|       |terraform.tfvars
 ```
 
 **Runner**
