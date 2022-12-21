@@ -4,7 +4,7 @@
 
 This GitHub actions workflow file has been written to build cloud resources with Terraform. It is ready to go and fundamentally only requires one edit to make it work which is the target working directory of the Terraform code against which it will work.
 
-## TL;DR
+# TL;DR
 
 > Ensure the workflow is located in your own GitHub repository
 >
@@ -12,13 +12,13 @@ This GitHub actions workflow file has been written to build cloud resources with
 >
 > Execute the workflow by either a  `push` `pull request` or `manually`
 
-## What the workflow does
+# What the workflow does
 
-**Triggers**
+## Triggers
 
 There are multiple triggers for this workflow to execute. The automatic execution occurs on either a `push` or `pull request`. You can choose to run the workflow manually and then choose Terraform `Apply` or `Destroy`.
 
-**Working directory**
+## Working directory
 
 The workflow expects Terraform code to be in the given working directory. This workflow has succeeded when the working directory is setup as follows. So your working directory value would be `codefolder1/` if using the structure exactly as below.
 
