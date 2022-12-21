@@ -1,6 +1,7 @@
 `gh-actions-example1.yaml`
 
 # Overview
+
 This GitHub actions workflow file has been written to build cloud resources with Terraform. It is ready to go and fundamentally only requires one edit to make it work which is the target working directory of the Terraform code against which it will work.
 
 **TL;DR**
@@ -15,7 +16,6 @@ This GitHub actions workflow file has been written to build cloud resources with
 **Triggers**
 
 There are multiple triggers for this workflow to execute. The automatic execution occurs on either a `push` or `pull request`. You can choose to run the workflow manually and then choose Terraform `Apply` or `Destroy`.
-
 
 **Working directory**
 
@@ -45,7 +45,7 @@ ARM_CLIENT_ID: ${{secrets.ARM_CLIENT_ID}}
 ARM_CLIENT_SECRET: ${{secrets.ARM_CLIENT_SECRET}}
 ARM_TENANT_ID: ${{secrets.ARM_TENANT_ID}}
 ARM_SUBSCRIPTION_ID: ${{secrets.ARM_SUBSCRIPTION_ID}}
-``` 
+```
 
 **Terraform actions**
 
