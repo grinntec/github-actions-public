@@ -1,7 +1,7 @@
 # .github/workflows/gh-actions-example1.yaml
 #
 # this workflow will
-#   1) create a github hosted ubutnu runner
+#   1) create a github hosted ubuntu runner
 #   2) use github hosted secrets to authenticate to azure
 #   3) checkout the code from the working-directory
 #   4) install terraform on the runner
@@ -95,9 +95,9 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+            #### Terraform Initialization ✅\`${{ steps.init.outcome }}\`
+            #### Terraform Plan ✅\`${{ steps.plan.outcome }}\`
+            #### Terraform Validation ✅\`${{ steps.validate.outcome }}\`
             <details><summary>Show Plan</summary>
             \`\`\`\n
             ${process.env.PLAN}
