@@ -4,7 +4,8 @@
 
 This GitHub actions workflow file has been written to build cloud resources with Terraform. It is ready to go and fundamentally only requires one edit to make it work which is the target working directory of the Terraform code against which it will work.
 
-**TL;DR**
+## TL;DR
+
 > Ensure the workflow is located in your own GitHub repository
 
 > Edit the `working-directory` path to match your code working directory
@@ -19,9 +20,9 @@ There are multiple triggers for this workflow to execute. The automatic executio
 
 **Working directory**
 
-The workflow expects Terraform code to be in the given working directory. This workflow has succeeded when the working directory is setup as follows. So your working directory value woud be `codefolder1/` if using the structure exactly as below.
+The workflow expects Terraform code to be in the given working directory. This workflow has succeeded when the working directory is setup as follows. So your working directory value would be `codefolder1/` if using the structure exactly as below.
 
-```
+```sh
 .
 {GitHub account}
 |_{GitHub repository}
@@ -40,7 +41,7 @@ This workflow relies on using GitHub provisioned runners. It declares a standard
 
 GitHub actions secrets need to be populated with the `ARM_*` environment variables that has the service principal credentials with permissions required to CRUD cloud resources.
 
-```
+```sh
 ARM_CLIENT_ID: ${{secrets.ARM_CLIENT_ID}}
 ARM_CLIENT_SECRET: ${{secrets.ARM_CLIENT_SECRET}}
 ARM_TENANT_ID: ${{secrets.ARM_TENANT_ID}}
@@ -66,4 +67,4 @@ The workflow processes the following Terraform actions:
 **If triggered `manually`**
 It runs the same steps as the automated process aside from writing the `plan` to the comments of the `pull request`.
 
-Depending on the choice you select either `terrform apply` or `terraform destroy` commands will be executed.
+Depending on the choice you select either `terraform apply` or `terraform destroy` commands will be executed.
